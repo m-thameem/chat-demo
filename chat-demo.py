@@ -21,6 +21,9 @@ from langchain_core.messages import HumanMessage, AIMessage
 
 import json
 
+st.title("Foolhu Claude Test")
+anthropic_key = st.sidebar.text_input('Anthropic API Key', type='password')
+
 class Transliterator:
     def __init__(self):
         self.dictionary = self.load_dictionary()
@@ -77,10 +80,9 @@ class Transliterator:
 
 transliterator = Transliterator()
 
-load_dotenv()
-
-if not os.environ.get("ANTHROPIC_API_KEY"):
-    raise ValueError("API key for Anthropic not found in .env file")
+if not anthropic_key:
+    raise ValueError("Please enter your Anthropic API key in the sidebar")
+os.environ["ANTHROPIC_API_KEY"] = anthropic_key
 
 
 model = ChatAnthropic(model="claude-3-5-sonnet-20240620")
@@ -154,9 +156,6 @@ def response_generator():
     for word in response.split():
         yield word + " "
         time.sleep(0.05)
-
-st.title("Foolhu Claude Test")
-
 
 # Initialize chat history
 if "messages" not in st.session_state:
